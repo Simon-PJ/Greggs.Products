@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Greggs.Products.Api.Controllers;
+using Greggs.Products.Api.Currency;
 using Greggs.Products.Api.DataAccess;
 using Greggs.Products.Api.Models;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ public class ProductRetrievalTests
 {
     Mock<ILogger<ProductController>> logger = new Mock<ILogger<ProductController>>();
     Mock<IDataAccess<Product>> productAccess = new Mock<IDataAccess<Product>>();
+    Mock<IExchangeRateService> exchangeRateService = new Mock<IExchangeRateService>();
 
     [Fact]
     public void RetrievesExpectedProducts()
@@ -25,7 +27,7 @@ public class ProductRetrievalTests
 
         productAccess.Setup(x => x.List(pageStart, pageSize)).Returns(mockProducts);
 
-        var controller = new ProductController(logger.Object, productAccess.Object);
+        var controller = new ProductController(logger.Object, productAccess.Object, exchangeRateService.Object);
 
         var result = controller.Get(pageStart, pageSize);
 
@@ -35,7 +37,7 @@ public class ProductRetrievalTests
     [Fact]
     public void CreatesALogEntry()
     {
-        var controller = new ProductController(logger.Object, productAccess.Object);
+        var controller = new ProductController(logger.Object, productAccess.Object, exchangeRateService.Object);
 
         controller.Get(2, 4);
 
@@ -59,9 +61,9 @@ public class ProductRetrievalTests
 
         productAccess.Setup(x => x.List(It.IsAny<int>(), It.IsAny<int>())).Returns(mockProducts);
 
-        var controller = new ProductController(logger.Object, productAccess.Object);
+        var controller = new ProductController(logger.Object, productAccess.Object, exchangeRateService.Object);
 
-        var result = controller.Get(-1, 3);
+        var result = controller.Get(pageStart, pageSize);
 
         result.Should().BeEmpty();
     }

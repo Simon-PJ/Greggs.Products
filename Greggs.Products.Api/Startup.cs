@@ -1,3 +1,4 @@
+using Greggs.Products.Api.Currency;
 using Greggs.Products.Api.DataAccess;
 using Greggs.Products.Api.Models;
 using Microsoft.AspNetCore.Builder;
@@ -16,6 +17,7 @@ public class Startup
         services.AddSwaggerGen();
 
         services.AddSingleton<IDataAccess<Product>>(new ProductAccess());
+        services.AddSingleton<IExchangeRateService>(new ExchangeRateService());
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

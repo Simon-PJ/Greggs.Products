@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Greggs.Products.Api.Controllers;
+using Greggs.Products.Api.Currency;
 using Greggs.Products.Api.DataAccess;
 using Greggs.Products.Api.Models;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ namespace Greggs.Products.IntegrationTests
         public void TestFirstPage()
         {
             var productsAccess = new ProductAccess();
-            var controller = new ProductController(logger.Object, productsAccess);
+            var controller = new ProductController(logger.Object, productsAccess, new ExchangeRateService());
 
             var results = controller.Get(0, 3);
 
@@ -32,7 +33,7 @@ namespace Greggs.Products.IntegrationTests
         public void TestLaterPage()
         {
             var productsAccess = new ProductAccess();
-            var controller = new ProductController(logger.Object, productsAccess);
+            var controller = new ProductController(logger.Object, productsAccess, new ExchangeRateService());
 
             var results = controller.Get(3, 2);
 
@@ -46,7 +47,7 @@ namespace Greggs.Products.IntegrationTests
         public void SelectionExceedsNumberOfProducts_ReturnWhatWeCan()
         {
             var productsAccess = new ProductAccess();
-            var controller = new ProductController(logger.Object, productsAccess);
+            var controller = new ProductController(logger.Object, productsAccess, new ExchangeRateService());
 
             var results = controller.Get(6, 2);
 
